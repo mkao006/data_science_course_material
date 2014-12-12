@@ -1,0 +1,67 @@
+For this assignment, I have chosen the "Digit Recognizer"
+competition. The aim of the competition is to accurately classify
+hand-drawn number digits (0-9) in grey-scale. Each image is 28 pixels
+in height and 28 pixels in width, resulting in a total of 784 (28 x 28)
+pixels in total. Each pixel is represented with a numeric value
+between 0 and 255 denoting the grey-scale of the pixel. A value of 0
+indicate white, while a value of 255 indicate black and different
+shades of grey in between. The evaluation is based on "categorization
+accuracy" or the proportion of images correctly classified.
+
+------------------------------------------------------------------------
+
+To classify the image, each pixel was used to represents a
+feature. That is, each observation (image) has 784 features (pixel)
+with the value being the color intensity, and since we need all the
+pixels to classify a complete image, no variable selection is
+required.
+
+I started with some basic visualization to grasp a feeling what these
+hand written digit look like and whether the images can be potentially
+corrupted. This is achieved by using a heat map in R.
+
+The random forest was chosen for the exercise. It is one of the best
+of the shelf prediction tool, and should perform well for such a
+simple task.
+
+
+
+------------------------------------------------------------------------
+
+The entire analysis was performed in R with the randomForest
+library. To have good prediction performance, I set the number of
+trees to 3000 and grew the tree without pruning. However, this was too
+heavy for my laptop and I ended up distribute it on AWS EC2.
+
+
+------------------------------------------------------------------------
+
+
+Using the random forest, I obtained a prediction error of 4% which
+means 96% of the classification were correct. 
+
+Looking at the confusion matrix, it seems that the random forest has
+some difficulty in distinguishing 2, 3, 7, 8. I also visualized images
+which were misclassificaion to see the shape of these images in order
+to further improve the algorithm.
+
+From further inspection of the visualization of the misclassified
+images, I identified some images which were labelled as 3 but
+classified as a 7. This was due to the fact that the curvature of the
+3 was very minor.
+
+From the results and the inspection, minor modification would be able
+to further reduce the misclassification rate to close to zero.
+
+------------------------------------------------------------------------
+
+To assist the algorithm in separating the difficulties faced, I have
+further added a feature representing the center of gravity. The
+feature is computed by taking the point which minimizes the distance
+to all non zero values.
+
+This helped to distinguish between 7 and 8 as the center of the
+gravity of 7 is slightly above 8; while the center of gravity of 3 is
+more to the left when compared to 8.
+
+The accuracy improved 2.5% from 96% to 98.5%.
